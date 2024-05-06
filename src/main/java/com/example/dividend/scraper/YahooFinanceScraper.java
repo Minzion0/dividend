@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class YahooFinanceScraper {
+public class YahooFinanceScraper implements Scraper{
 
     private static final String BASE_URL = "https://finance.yahoo.com/quote/%s/history?frequency=1mo&period1=%d&period2=%d";
     private static final long START_TIME = 86400; // 60*60*24
@@ -66,6 +66,7 @@ public class YahooFinanceScraper {
         }
         return scrapedResult;
     }
+    @Override
     public Company scrapCompanyByTicker(String ticker){
         String url = String.format(SUMMARY_URL, ticker,ticker);
         try{
@@ -81,6 +82,11 @@ public class YahooFinanceScraper {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    @Override
+    public ScrapedResult scrap(Company company) {
         return null;
     }
 
