@@ -11,16 +11,11 @@ import org.jsoup.select.Elements;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class DividendApplication {
 
     public static void main(String[] args) {
-//      SpringApplication.run(DividendApplication.class, args);
-        YahooFinanceScraper yahooFinanceScraper = new YahooFinanceScraper();
-
-        Company result = yahooFinanceScraper.scrapCompanyByTicker("MMM");
-        System.out.println(result);
-
+      SpringApplication.run(DividendApplication.class, args);
     }
 
 }

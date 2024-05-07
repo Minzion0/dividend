@@ -1,5 +1,6 @@
 package com.example.dividend.persist.entity;
 
+import com.example.dividend.model.Dividend;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,4 +27,10 @@ public class DividendEntity {
     private LocalDateTime date;
 
     private String dividend;
+
+    public DividendEntity(Long companyId, Dividend dividend){
+        this.companyId=companyId;
+        this.date=dividend.getDate();
+        this.dividend=dividend.getDividend();
+    }
 }
