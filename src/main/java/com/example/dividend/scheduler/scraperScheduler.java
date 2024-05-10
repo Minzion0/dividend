@@ -8,11 +8,12 @@ import com.example.dividend.persist.repository.CompanyRepository;
 import com.example.dividend.persist.repository.DividendRepository;
 import com.example.dividend.scraper.YahooFinanceScraper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class scraperScheduler {
@@ -20,12 +21,14 @@ public class scraperScheduler {
     private final YahooFinanceScraper yahooFinanceScraper;
     private final DividendRepository dividendRepository;
     //일정 주기마다 수행
-    @Scheduled(cron ="")
+    @Scheduled(cron =" 0 0 0 * * *")
     public void yahooFinanceScheduling(){
+
         //저장된 회사 목록 조회
         List<CompanyEntity> companys = this.companyRepository.findAll();
         //회사마다 배당금 정보를 새로 스크랩핑
         for (CompanyEntity company : companys) {
+            log.info("scraping scheduler is started -> {}",company.getName());
             ScrapedResult scrapedResult = this.yahooFinanceScraper.scrap(
                     Company.builder()
                             .name(company.getName())
@@ -51,6 +54,7 @@ public class scraperScheduler {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
 
         }
