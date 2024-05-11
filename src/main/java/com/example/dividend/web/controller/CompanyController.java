@@ -3,7 +3,6 @@ package com.example.dividend.web.controller;
 import com.example.dividend.model.Company;
 import com.example.dividend.persist.entity.CompanyEntity;
 import com.example.dividend.service.CompanyService;
-import com.example.dividend.service.FinanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

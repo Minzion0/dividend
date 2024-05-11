@@ -2,7 +2,9 @@ package com.example.dividend.persist.entity;
 
 import com.example.dividend.model.Company;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity(name = "COMPANY")
 @Getter
