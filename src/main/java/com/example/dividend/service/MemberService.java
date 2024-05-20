@@ -45,12 +45,15 @@ public class MemberService implements UserDetailsService {
      * @return
      */
     public MemberEntity authenticate(Auth.SignIn member){
+        //id를 기준으로 사용자 찾기
         MemberEntity memberEntity = this.memberRepository.findAllByUsername(member.getUsername())
-                .orElseThrow(() -> new RuntimeException("존제하지 않는 사용자 입니다."));
-        String inputPw = passwordEncoder.encode(member.getPassword());
-        if (!inputPw.equals(memberEntity.getPassword())){
-            throw new RuntimeException("비밀번호가 틀렷습니다");
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자 입니다."));
+
+        //조회한 아이디를 기준으로 비밀번호 검증
+        if (!this.passwordEncoder.matches(member.getPassword(),memberEntity.getPassword())){
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
+
         return memberEntity;
     }
 }
