@@ -25,7 +25,7 @@ public class AuthController {
     public ResponseEntity<?> signup(@RequestBody Auth.SignUp request){
         //회원 가입을 위한 API
         MemberEntity memberResponse = this.memberService.register(request);
-
+        log.info("signup");
         return ResponseEntity.ok(memberResponse);
     }
 
@@ -40,8 +40,6 @@ public class AuthController {
         //로그인 API
         MemberEntity member = this.memberService.authenticate(request);
         String token = this.tokenProvider.generateToken(member.getUsername(), member.getRoles());
-        System.out.println("============================================");
-        System.out.println(token);
         return ResponseEntity.ok(token);
     }
 }

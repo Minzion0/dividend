@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -76,5 +77,16 @@ public class CompanyService {
 
     public void deleteAutocompleteKeyword(String keyword){
         this.trie.remove(keyword);
+    }
+    @Transactional
+    public String  deleteCompany(String ticker) {
+        CompanyEntity company = companyRepository.findByTicker(ticker)
+                .orElseThrow(() -> new RuntimeException("not found company ->" + ticker));
+
+        dividendRepository.deleteByCompanyId(company.getId());
+        companyRepository.deleteById(company.getId());
+
+        return company.getName();
+
     }
 }

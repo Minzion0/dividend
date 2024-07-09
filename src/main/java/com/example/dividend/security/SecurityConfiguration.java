@@ -1,11 +1,12 @@
 package com.example.dividend.security;
 
+import com.example.dividend.model.constants.Authority;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,9 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Slf4j
 @Configuration
@@ -32,18 +31,19 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
-                .formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
                                 .requestMatchers(
-                                        AntPathRequestMatcher.antMatcher("/auth/**")
-                                ).authenticated()
-                                .requestMatchers(
-                                        "/h2-console/**",
-                                        "/**/signup",
-                                        "/**/signin"
+                                        "/auth/signup",
+                                        "/auth/signin",
+                                        "/h2-console/**"
                                 ).permitAll()
+                                .requestMatchers(HttpMethod.GET, "/company").hasAnyRole(Authority.ROLE_READ.getRole(), Authority.ROLE_WRITE.getRole())
+                                .requestMatchers(HttpMethod.POST, "/company").hasRole(Authority.ROLE_WRITE.getRole())
+                                .requestMatchers(HttpMethod.DELETE, "/company").hasRole(Authority.ROLE_WRITE.getRole())
+                                .anyRequest().authenticated()
                 )
+                .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .headers(
                         headersConfigurer ->
                                 headersConfigurer.frameOptions(
